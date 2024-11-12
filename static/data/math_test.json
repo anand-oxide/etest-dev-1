@@ -1,0 +1,37 @@
+{
+    "test_id": "math_001",
+    "title": "Sample Math Test",
+    "description": "Basic arithmetic and algebra questions",
+    "questions": [
+        {
+            "question_id": 1,
+            "question_text": "What is 15 + 27?",
+            "options": [
+                {"id": 1, "text": "42", "is_correct": true},
+                {"id": 2, "text": "41", "is_correct": false},
+                {"id": 3, "text": "43", "is_correct": false},
+                {"id": 4, "text": "44", "is_correct": false}
+            ]
+        },
+        {
+            "question_id": 2,
+            "question_text": "Solve for x: 2x + 5 = 13",
+            "options": [
+                {"id": 1, "text": "3", "is_correct": false},
+                {"id": 2, "text": "4", "is_correct": true},
+                {"id": 3, "text": "5", "is_correct": false},
+                {"id": 4, "text": "6", "is_correct": false}
+            ]
+        },
+        {
+            "question_id": 3,
+            "question_text": "What is 8 × 7?",
+            "options": [
+                {"id": 1, "text": "54", "is_correct": false},
+                {"id": 2, "text": "56", "is_correct": true},
+                {"id": 3, "text": "58", "is_correct": false},
+                {"id": 4, "text": "52", "is_correct": false}
+            ]
+        }
+    ]
+}

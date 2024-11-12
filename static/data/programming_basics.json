@@ -1,0 +1,37 @@
+{
+    "test_id": "prog_001",
+    "title": "Programming Basics",
+    "description": "Fundamental programming concepts test",
+    "questions": [
+        {
+            "question_id": 1,
+            "question_text": "What does HTML stand for?",
+            "options": [
+                {"id": 1, "text": "Hyper Text Markup Language", "is_correct": true},
+                {"id": 2, "text": "High Tech Modern Language", "is_correct": false},
+                {"id": 3, "text": "Hyper Transfer Markup Language", "is_correct": false},
+                {"id": 4, "text": "Home Tool Markup Language", "is_correct": false}
+            ]
+        },
+        {
+            "question_id": 2,
+            "question_text": "Which of these is not a programming language?",
+            "options": [
+                {"id": 1, "text": "Python", "is_correct": false},
+                {"id": 2, "text": "Java", "is_correct": false},
+                {"id": 3, "text": "Photoshop", "is_correct": true},
+                {"id": 4, "text": "JavaScript", "is_correct": false}
+            ]
+        },
+        {
+            "question_id": 3,
+            "question_text": "What symbol is used for single-line comments in Python?",
+            "options": [
+                {"id": 1, "text": "//", "is_correct": false},
+                {"id": 2, "text": "#", "is_correct": true},
+                {"id": 3, "text": "/*", "is_correct": false},
+                {"id": 4, "text": "--", "is_correct": false}
+            ]
+        }
+    ]
+}

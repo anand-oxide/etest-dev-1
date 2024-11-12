@@ -1,0 +1,33 @@
+{
+    "id": "math_001",
+    "title": "Mathematics Test",
+    "description": "Test your mathematical skills with questions covering algebra, geometry, and arithmetic.",
+    "timeLimit": 30,
+    "questions": [
+        {
+            "text": "What is the result of 15 × 7?",
+            "options": ["95", "105", "115", "125"],
+            "correctAnswer": 1
+        },
+        {
+            "text": "Solve for x: 2x + 5 = 13",
+            "options": ["3", "4", "5", "6"],
+            "correctAnswer": 1
+        },
+        {
+            "text": "What is the area of a rectangle with length 8 units and width 6 units?",
+            "options": ["24 square units", "28 square units", "48 square units", "56 square units"],
+            "correctAnswer": 2
+        },
+        {
+            "text": "What is 25% of 80?",
+            "options": ["15", "20", "25", "30"],
+            "correctAnswer": 1
+        },
+        {
+            "text": "If a triangle has angles measuring 45°, 45°, and 90°, what type of triangle is it?",
+            "options": ["Equilateral", "Isosceles", "Scalene", "None of the above"],
+            "correctAnswer": 1
+        }
+    ]
+}
