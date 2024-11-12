@@ -3,81 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take Test - eTest</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <title>eTest - Take Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
         <h1 id="test-title">Loading Test...</h1>
-        <p id="test-description"></p>
-        <form id="test-form">
+        <form id="test-form" onsubmit="submitTest(event)">
             <div id="questions-container">
-                <!-- Questions will be loaded dynamically -->
+                <!-- Questions will be loaded here dynamically -->
             </div>
             <button type="submit" class="submit-btn">Submit Test</button>
         </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get test ID from URL parameters
+        async function loadTest() {
             const urlParams = new URLSearchParams(window.location.search);
             const testId = urlParams.get('test');
-
-            // Fetch test data
-            fetch(`../static/data/${testId}.json`)
-                .then(response => response.json())
-                .then(test => {
-                    // Update title and description
-                    document.getElementById('test-title').textContent = test.title;
-                    document.getElementById('test-description').textContent = test.description;
-
-                    // Load questions
-                    const questionsContainer = document.getElementById('questions-container');
-                    test.questions.forEach((question, index) => {
-                        const questionDiv = document.createElement('div');
-                        questionDiv.className = 'question';
-                        questionDiv.innerHTML = `
-                            <div class="question-text">${index + 1}. ${question.text}</div>
+            
+            try {
+                const response = await fetch(`{{ url_for('static', filename='data/') }}${testId}.json`);
+                if (!response.ok) throw new Error('Test not found');
+                
+                const testData = await response.json();
+                document.getElementById('test-title').textContent = testData.title;
+                
+                const container = document.getElementById('questions-container');
+                testData.questions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.innerHTML = `
+                        <p class="question-text">${index + 1}. ${question.question}</p>
+                        <div class="options">
                             ${question.options.map((option, optIndex) => `
                                 <div class="option">
-                                    <input type="radio" name="q${index}" id="q${index}o${optIndex}" value="${optIndex}">
+                                    <input type="radio" 
+                                           name="q${index}" 
+                                           id="q${index}o${optIndex}"
+                                           value="${option}">
                                     <label for="q${index}o${optIndex}">${option}</label>
                                 </div>
                             `).join('')}
-                        `;
-                        questionsContainer.appendChild(questionDiv);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading test:', error);
-                    document.getElementById('test-title').textContent = 'Error Loading Test';
+                        </div>
+                    `;
+                    container.appendChild(questionDiv);
                 });
+            } catch (error) {
+                console.error('Error loading test:', error);
+                document.getElementById('test-title').textContent = 'Error loading test';
+            }
+        }
 
-            // Handle form submission
-            document.getElementById('test-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Collect all answers
-                const answers = [];
-                const questions = document.querySelectorAll('.question');
-                
-                questions.forEach((question, index) => {
-                    const selectedOption = question.querySelector(`input[name="q${index}"]:checked`);
-                    answers.push(selectedOption ? selectedOption.value : null);
-                });
-                
-                // Check if all questions are answered
-                if (answers.includes(null)) {
-                    alert('Please answer all questions before submitting.');
-                    return;
-                }
-                
-                // Redirect to results page with test ID and answers
-                const answersParam = encodeURIComponent(JSON.stringify(answers));
-                window.location.href = `results.html?test=${testId}&answers=${answersParam}`;
-            });
-        });
+        async function submitTest(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('test-form');
+            const formData = new FormData(form);
+            const answers = {};
+            
+            for (let [name, value] of formData.entries()) {
+                answers[name] = value;
+            }
+
+            // Store answers in session storage for results page
+            sessionStorage.setItem('testAnswers', JSON.stringify(answers));
+            
+            // Redirect to results page
+            window.location.href = "{{ url_for('results') }}";
+        }
+
+        // Load test when page loads
+        window.addEventListener('load', loadTest);
     </script>
 </body>
 </html>
