@@ -1,0 +1,37 @@
+{
+    "test_id": "gk_001",
+    "title": "General Knowledge Quiz",
+    "description": "Test your knowledge about various topics",
+    "questions": [
+        {
+            "question_id": 1,
+            "question_text": "What is the capital of France?",
+            "options": [
+                {"id": 1, "text": "London", "is_correct": false},
+                {"id": 2, "text": "Berlin", "is_correct": false},
+                {"id": 3, "text": "Paris", "is_correct": true},
+                {"id": 4, "text": "Madrid", "is_correct": false}
+            ]
+        },
+        {
+            "question_id": 2,
+            "question_text": "Which planet is known as the Red Planet?",
+            "options": [
+                {"id": 1, "text": "Venus", "is_correct": false},
+                {"id": 2, "text": "Mars", "is_correct": true},
+                {"id": 3, "text": "Jupiter", "is_correct": false},
+                {"id": 4, "text": "Saturn", "is_correct": false}
+            ]
+        },
+        {
+            "question_id": 3,
+            "question_text": "Who painted the Mona Lisa?",
+            "options": [
+                {"id": 1, "text": "Vincent van Gogh", "is_correct": false},
+                {"id": 2, "text": "Pablo Picasso", "is_correct": false},
+                {"id": 3, "text": "Leonardo da Vinci", "is_correct": true},
+                {"id": 4, "text": "Michelangelo", "is_correct": false}
+            ]
+        }
+    ]
+}

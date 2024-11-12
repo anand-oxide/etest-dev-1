@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Test - eTest</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="test-title">Loading Test...</h1>
+        <p id="test-description"></p>
+        <form id="test-form">
+            <div id="questions-container">
+                <!-- Questions will be loaded dynamically -->
+            </div>
+            <button type="submit" class="submit-btn">Submit Test</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get test ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const testId = urlParams.get('test');
+
+            // Fetch test data
+            fetch(`../static/data/${testId}.json`)
+                .then(response => response.json())
+                .then(test => {
+                    // Update title and description
+                    document.getElementById('test-title').textContent = test.title;
+                    document.getElementById('test-description').textContent = test.description;
+
+                    // Load questions
+                    const questionsContainer = document.getElementById('questions-container');
+                    test.questions.forEach((question, index) => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'question';
+                        questionDiv.innerHTML = `
+                            <div class="question-text">${index + 1}. ${question.text}</div>
+                            ${question.options.map((option, optIndex) => `
+                                <div class="option">
+                                    <input type="radio" name="q${index}" id="q${index}o${optIndex}" value="${optIndex}">
+                                    <label for="q${index}o${optIndex}">${option}</label>
+                                </div>
+                            `).join('')}
+                        `;
+                        questionsContainer.appendChild(questionDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading test:', error);
+                    document.getElementById('test-title').textContent = 'Error Loading Test';
+                });
+
+            // Handle form submission
+            document.getElementById('test-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Collect all answers
+                const answers = [];
+                const questions = document.querySelectorAll('.question');
+                
+                questions.forEach((question, index) => {
+                    const selectedOption = question.querySelector(`input[name="q${index}"]:checked`);
+                    answers.push(selectedOption ? selectedOption.value : null);
+                });
+                
+                // Check if all questions are answered
+                if (answers.includes(null)) {
+                    alert('Please answer all questions before submitting.');
+                    return;
+                }
+                
+                // Redirect to results page with test ID and answers
+                const answersParam = encodeURIComponent(JSON.stringify(answers));
+                window.location.href = `results.html?test=${testId}&answers=${answersParam}`;
+            });
+        });
+    </script>
+</body>
+</html>
