@@ -3,68 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Results - eTest</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <title>eTest - Test Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
         <h1 id="results-title">Test Results</h1>
-        <div id="score-summary">
-            <h2>Score: <span id="score">Calculating...</span></h2>
-            <p>Test: <span id="test-name"></span></p>
+        <div id="score-container">
+            <h2>Your Score: <span id="score">Calculating...</span></h2>
         </div>
-        <div id="detailed-results">
-            <!-- Results will be loaded dynamically -->
+        <div id="results-container">
+            <!-- Results will be loaded here dynamically -->
         </div>
-        <a href="../index.html" class="home-btn">Return to Home</a>
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn">Back to Tests</a>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get test ID and answers from URL parameters
+        async function loadResults() {
+            const answers = JSON.parse(sessionStorage.getItem('testAnswers') || '{}');
             const urlParams = new URLSearchParams(window.location.search);
             const testId = urlParams.get('test');
-            const userAnswers = JSON.parse(decodeURIComponent(urlParams.get('answers')));
-
-            // Fetch test data
-            fetch(`../static/data/${testId}.json`)
-                .then(response => response.json())
-                .then(test => {
-                    // Update test name
-                    document.getElementById('test-name').textContent = test.title;
-
-                    // Calculate score
-                    let correctAnswers = 0;
-                    const detailedResults = document.getElementById('detailed-results');
-
-                    test.questions.forEach((question, index) => {
-                        const userAnswer = parseInt(userAnswers[index]);
-                        const isCorrect = userAnswer === question.correct;
-                        if (isCorrect) correctAnswers++;
-
-                        // Create result item
-                        const resultDiv = document.createElement('div');
-                        resultDiv.className = `result-item ${isCorrect ? 'correct' : 'incorrect'}`;
-                        resultDiv.innerHTML = `
-                            <h3>Question ${index + 1}</h3>
-                            <p class="question-text">${question.text}</p>
-                            <p>Your answer: ${question.options[userAnswer]}</p>
-                            <p>Correct answer: ${question.options[question.correct]}</p>
-                            <p class="feedback">${isCorrect ? '✓ Correct' : '✗ Incorrect'}</p>
-                        `;
-                        detailedResults.appendChild(resultDiv);
-                    });
-
-                    // Update score
-                    const scorePercentage = (correctAnswers / test.questions.length) * 100;
-                    document.getElementById('score').textContent = 
-                        `${correctAnswers}/${test.questions.length} (${scorePercentage.toFixed(1)}%)`;
-                })
-                .catch(error => {
-                    console.error('Error loading test results:', error);
-                    document.getElementById('results-title').textContent = 'Error Loading Results';
+            
+            try {
+                const response = await fetch(`{{ url_for('static', filename='data/') }}${testId}.json`);
+                if (!response.ok) throw new Error('Test data not found');
+                
+                const testData = await response.json();
+                let correctAnswers = 0;
+                
+                const container = document.getElementById('results-container');
+                testData.questions.forEach((question, index) => {
+                    const userAnswer = answers[`q${index}`];
+                    const isCorrect = userAnswer === question.correct_answer;
+                    if (isCorrect) correctAnswers++;
+                    
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = `question-result ${isCorrect ? 'correct' : 'incorrect'}`;
+                    resultDiv.innerHTML = `
+                        <p class="question-text">${index + 1}. ${question.question}</p>
+                        <p class="answer-info">Your answer: ${userAnswer || 'Not answered'}</p>
+                        <p class="answer-info">Correct answer: ${question.correct_answer}</p>
+                        <p class="result-status">${isCorrect ? 'Correct!' : 'Incorrect'}</p>
+                    `;
+                    container.appendChild(resultDiv);
                 });
-        });
+                
+                // Calculate and display score
+                const score = Math.round((correctAnswers / testData.questions.length) * 100);
+                document.getElementById('score').textContent = `${score}% (${correctAnswers}/${testData.questions.length})`;
+                
+            } catch (error) {
+                console.error('Error loading results:', error);
+                document.getElementById('results-container').innerHTML = '<p class="error">Error loading test results</p>';
+            }
+        }
+
+        // Load results when page loads
+        window.addEventListener('load', loadResults);
     </script>
 </body>
 </html>
