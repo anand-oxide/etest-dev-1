@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eTest - Online Testing Platform</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -12,7 +12,7 @@
         <div class="test-list">
             <div class="test-item">
                 <div class="test-title">
-                    <a href="test.html?test=math_001">Mathematics Test</a>
+                    <a href="{{ url_for('test') }}?test=math_001">Mathematics Test</a>
                 </div>
                 <div class="test-description">
                     Test your mathematical skills with questions covering algebra, geometry, and arithmetic.
@@ -20,7 +20,7 @@
             </div>
             <div class="test-item">
                 <div class="test-title">
-                    <a href="test.html?test=gk_001">General Knowledge Quiz</a>
+                    <a href="{{ url_for('test') }}?test=gk_001">General Knowledge Quiz</a>
                 </div>
                 <div class="test-description">
                     Challenge yourself with questions about history, science, geography, and current affairs.
@@ -28,7 +28,7 @@
             </div>
             <div class="test-item">
                 <div class="test-title">
-                    <a href="test.html?test=prog_001">Programming Basics</a>
+                    <a href="{{ url_for('test') }}?test=prog_001">Programming Basics</a>
                 </div>
                 <div class="test-description">
                     Test your understanding of fundamental programming concepts and syntax.
